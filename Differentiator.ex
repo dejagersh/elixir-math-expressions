@@ -20,11 +20,34 @@ defmodule Expression.Differentiator do
         Expression.new(numerator, :divided_by, denominator)
 
       :raised_to ->
-        if f == :e do # base number is E
-          Expression.new(%Expression{identifier: :raised_to, type: :operator, args: [:e, g]}, :times, gprime)
+        cond do
 
+          # (e^u)' = e(u) * u'
+          f == :e -> Expression.new(Expression.new(:e, :raised_to, g), :times, gprime)
+
+          # (a^u)' = a^u * ln(a) * u'
+          !Expression.contains_variable?(f, respect_to) -> Expression.new(Expression.new(Expression.new(f, :raised_to, g), :times, Expression.new(:log, f)), :times, gprime)
+
+          # (u^a) = a * u ^ (a-1) * u'
+          # u = f
+          # a = g
+          Expression.contains_variable?(f, respect_to) and !Expression.contains_variable?(g, respect_to) -> Expression.new(Expression.new(g, :times, Expression.new(f, :raised_to, Expression.new(g, :minus, 1))), :times, fprime)
+
+          true -> raise ArgumentError, message: "Sorry, cannot compute derivate of this expression."
         end
     end
+  end
+
+  def differentiate(%Expression{identifier: identifier, type: :function, args: [g]}, respect_to) do
+    gprime = differentiate(g, respect_to)
+
+    lhs =
+      case identifier do
+        :cos -> Expression.new(-1, :times, Expression.new(:sin, g))
+        :sin -> Expression.new(:cos, g)
+      end
+
+    Expression.new(lhs, :times, gprime)
   end
 
   def differentiate(var, respect_to) when is_atom(var) do

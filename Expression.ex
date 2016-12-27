@@ -5,6 +5,7 @@ defmodule Expression do
     %Expression{identifier: identifier, type: :operator, args: [arg1, arg2]}
   end
 
+
   def new(function_name, args) when is_list(args) do
 
     # Check if the function exists
@@ -25,6 +26,49 @@ defmodule Expression do
   def new(function_name, arg) do
     new(function_name, [arg])
   end
+
+  def contains_any_variable?(%Expression{identifier: _, type: _, args: args}) do
+    #       |> Enum.reduce(%{:line => "", :length => 0}, fn(element, longest) -> if element[:length] > longest[:length] do element else longest end end)
+    true in Enum.map(args, &(contains_any_variable?(&1)))
+  end
+
+  def contains_any_variable?(a) when is_atom(a) do
+    if Map.has_key?(allowed_constants, a) do
+      false
+    else
+      true
+    end
+  end
+
+  def contains_any_variable?(_) do
+    false
+  end
+
+  def contains_variable?(%Expression{identifier: _, type: _, args: args}, needle) do
+    true in Enum.map(args, &(contains_variable?(&1, needle)))
+  end
+
+  def contains_variable?(a, needle) do
+    a === needle
+  end
+
+
+  def is_variable?(a) when is_atom(a) do
+    if Map.has_key?(allowed_constants, a) do
+      false
+    else
+      true
+    end
+  end
+
+  def is_valid_function(function_name) do
+    allowed_functions |> Map.has_key?(function_name)
+  end
+
+  def is_valid_operator?(operator_name) do
+    allowed_operators |> Map.has_key?(operator_name)
+  end
+
 
   def evaluate(a) when is_atom(a) do
     if !Map.has_key?(allowed_constants, a) do
