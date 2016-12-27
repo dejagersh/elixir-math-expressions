@@ -26,6 +26,14 @@ defmodule Expression do
     new(function_name, [arg])
   end
 
+  def evaluate(a) when is_atom(a) do
+    if !Map.has_key?(allowed_constants, a) do
+      raise ArgumentError, message: "Can not evaluate expression: expression still contains variables."
+    end
+
+    allowed_constants[a]
+  end
+
   def evaluate(%Expression{identifier: function_name, type: :function, args: args}) do
     evaluated_args = args |> Enum.map(&(evaluate(&1)))
 
@@ -44,6 +52,25 @@ defmodule Expression do
   end
 
 
+  def set_variable(%Expression{identifier: identifier, type: type, args: args}, to_set, value) do
+    %Expression{
+      identifier: identifier,
+      type: type,
+      args: args |> Enum.map(&set_variable(&1, to_set, value))
+    }
+  end
+
+  def set_variable(a, to_set, value) when is_atom(a) do
+    if a == to_set do
+      value
+    else
+      a
+    end
+  end
+
+  def set_variable(k, _to_set, _value) when is_number(k) do
+      k
+  end
 
   def allowed_functions do
     %{
