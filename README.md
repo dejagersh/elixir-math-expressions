@@ -46,3 +46,13 @@ iex> Expression.new(1, :raised_to, Expression.new(1, :raised_to, 1)) |> Expressi
 1.0
 :ok
 ```
+# Computing derivatives
+
+## Examples
+Computing the derivative of `cos(sin(x))` with respect to `x` and simplifying the result:
+
+```
+iex> Expression.new(:cos, Expression.new(:sin, :x)) |> Expression.Differentiator.differentiate(:x) |> Expression.Simplifier.simplify |> IO.puts
+((-1 * sin(sin(x))) * cos(x))
+:ok
+```
