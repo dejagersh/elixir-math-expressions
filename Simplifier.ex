@@ -22,8 +22,6 @@ defmodule Expression.Simplifier do
                 # x * 1 = x
                 rhs === 1                                         -> lhs
 
-                is_number(lhs) and is_number(rhs)                 -> lhs * rhs
-
                 true -> %Expression{identifier: identifier, type: type, args: args}
               end
             :divided_by ->
@@ -57,17 +55,27 @@ defmodule Expression.Simplifier do
 
             :raised_to ->
               cond do
+
+                # x^1 = x
                 rhs === 1             -> lhs
 
+                # x ^ 0 = 1
+                rhs === 0             -> 1
+
+                # 1^x = 1
+                lhs === 1             -> 1
+
+                # 0^x = 0
+                lhs === 0             -> 0
+
+                true -> %Expression{identifier: identifier, type: type, args: args}
               end
 
             _ -> %Expression{identifier: identifier, type: type, args: args}
           end
         end
 
-
-
-      :function -> 9
+      :function -> %Expression{identifier: identifier, type: type, args: args}
     end
   end
 

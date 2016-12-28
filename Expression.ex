@@ -28,7 +28,6 @@ defmodule Expression do
   end
 
   def contains_any_variable?(%Expression{identifier: _, type: _, args: args}) do
-    #       |> Enum.reduce(%{:line => "", :length => 0}, fn(element, longest) -> if element[:length] > longest[:length] do element else longest end end)
     true in Enum.map(args, &(contains_any_variable?(&1)))
   end
 
@@ -127,7 +126,7 @@ defmodule Expression do
       cos:    &:math.cos/1,
       sin:    &:math.sin/1,
       tan:    &:math.tan/1
-    }
+      }
   end
 
   def allowed_constants do
