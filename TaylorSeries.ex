@@ -12,7 +12,7 @@ defmodule Expression.TaylorSeries do
     )
   end
 
-  def compute_mclaurin_series(func, respect_to, n_terms) do
+  def compute_maclaurin_series(func, respect_to, n_terms) do
     compute_taylor_series(func, 0, respect_to, n_terms)
   end
 

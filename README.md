@@ -74,13 +74,13 @@ iex> Expression.new(:cos, Expression.new(:sin, :x)) |> Expression.Differentiator
 :ok
 ```
 
-## Computing Taylor/McLaurin series
+## Computing Taylor/Maclaurin series
 The `Expression.TaylorSeries` module allows you to compute Taylor and McLaurin series of functions.
 
 ### Examples
-First five terms for the McLaurin series of `sin(x)`:
+First five terms for the Maclaurin series of `sin(x)`:
 ```
-iex> Expression.new(:sin, :x) |> Expression.TaylorSeries.compute_mclaurin_series(:x, 5) |> IO.puts
+iex> Expression.new(:sin, :x) |> Expression.TaylorSeries.compute_maclaurin_series(:x, 5) |> IO.puts
 ((((sin(x) + (cos(x) * x)) + (((-1 * sin(x)) / 2) * (x ^ 2))) + (((-1 * cos(x)) / 6) * (x ^ 3))) + (((-1 * (-1 * sin(x))) / 24) * (x ^ 4)))
 ```
 
