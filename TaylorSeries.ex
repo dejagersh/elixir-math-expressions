@@ -1,4 +1,4 @@
-defmodule TaylorSeries do
+defmodule Expression.TaylorSeries do
 
   def compute_taylor_series(func, _center, _respect_to, 1) do
     func
