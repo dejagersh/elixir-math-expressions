@@ -55,7 +55,7 @@ iex> Expression.new(:sin, Expression.new(:x, :raised_to, 2)) |> Expression.set_v
 ```
 
 ## Simplifying expressions
-The `Expression.Simplifier` module allows for basic simplifications like `0 * x => x`, `x^1 => x`. As of now, expressions like `2x + x` don't get simplified to `3x`.
+The `Expression.Simplifier` module allows for basic simplifications like `0 * x => 0`, `x^1 => x`. As of now, expressions like `2x + x` don't get simplified to `3x`.
 
 ### Examples
 Simplifying `1^1^1`:
